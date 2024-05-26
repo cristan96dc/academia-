@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursos Inscritos</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+<style>
+    .course-list {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .course-item {
+        background-color: #585757;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin: 10px;
+        padding: 15px;
+        width: 300px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .course-item .course-name {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 18px;
+        color: #007BFF;
+        text-decoration: none;
+     
+    
+    .course-details {
+        margin-top: 10px;
+    }
+       border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+    }
+    
+    .course-item .course-name:hover {
+        text-decoration: underline;
+    }
+    .course-details p {
+        margin: 5px 0;
+    }
+</style>
+</head>
+<body>
+    <ul class="navbar-links">
+        <li><a href="/">home</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="/comentarios_alumno/">Comentarios Alumno</a></li>
+        {% endif %}    <li><a href="/profe/">Profesores</a></li>
+        <li><a href="/lista-cursos/">Lista Cursos</a></li>
+    
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'cursos_inscritos' %}">Tus inscripciones</a></li>
+        <li><a href="/perfil/">Perfil</a></li>
+        <li>
+            <a href="#" id="notificaciones" data-url="{% url 'notificaciones' %}" class="notificaciones-link {{ notificaciones_class }}">{{ notificaciones_no_vistas }} Notificaciones</a>
+        </li>
+        {% endif %}
+    
+        <li>
+          {% if user.is_authenticated %}
+          <a href="{% url 'user_logout' %}">Logout</a>
+          {% else %}
+          <a href="{% url 'user_login' %}">Login</a>
+          {% endif %}
+        </li>
+    </ul>
+    <h1>Cursos Inscritos</h1>
+    <ul class="course-list">
+        {% for curso in cursos_inscritos %}
+            <li class="course-item">
+                <a href="{% url 'mostrar_temario' curso.id %}" class="course-name">
+                    <strong>{{ curso.nombre }}</strong>
+                </a>
+                <div class="course-details">
+                    <p><strong></strong> {{ curso.decribcion }}</p>
+
+                    <!-- Aquí puedes mostrar más información sobre el curso si lo deseas -->
+                </div>
+            </li>
+        {% empty %}
+            <li>No estás inscrito en ningún curso.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

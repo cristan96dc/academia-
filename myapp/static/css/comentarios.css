@@ -1,0 +1,52 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+form {
+    margin-bottom: 20px;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #585757;
+    border-radius: 4px;
+}
+
+
+.tweet-container {
+    background-color: #585757;
+    border: 1px solid #1da1f2;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+.tweet-header {
+    margin-bottom: 10px;
+}
+.tweet-username {
+    font-weight: bold;
+}
+.tweet-timestamp {
+    color: #66757f;
+    font-size: 12px;
+}
+.tweet-text {
+    margin-bottom: 10px;
+}
+.respuestas {
+    list-style: none;
+    padding-left: 0;
+}
+.respuestas li {
+    margin-bottom: 10px;
+}

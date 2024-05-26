@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comentario y Respuestas</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/comentarios.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <ul class="navbar-links">
+            <li><a href="/">Welcome</a></li>
+            <li><a href="/comentarios_alumno/">Comentarios Alumno</a></li>
+            <li><a href="/profe/">Profe</a></li>
+            <li><a href="/lista-cursos/">Lista Cursos</a></li>
+        
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'cursos_inscritos' %}">Tus inscripciones</a></li>
+            <li><a href="/perfil/">Perfil</a></li>
+            <li>
+                <a href="#" id="notificaciones" data-url="{% url 'notificaciones' %}" class="notificaciones-link {{ notificaciones_class }}">{{ notificaciones_no_vistas }} Notificaciones</a>
+            </li>
+            {% endif %}
+        
+            <li>
+              {% if user.is_authenticated %}
+              <a href="{% url 'user_logout' %}">Logout</a>
+              {% else %}
+              <a href="{% url 'user_login' %}">Login</a>
+              {% endif %}
+            </li>
+        </ul>
+        <h1>Comentario</h1>
+        <ul>
+            <!-- Comentario principal -->
+            <li class="tweet-container">
+                <div class="tweet-header">
+                    <span class="tweet-username">{{ comentario.alumno.username }}</span>
+                    <span class="tweet-timestamp">{{ comentario.fecha_creacion }}</span>
+                </div>
+                <p class="tweet-text">{{ comentario.texto }}</p>
+                <p>Likes: {{ comentario.likes.count }}</p>
+                <form method="post" action="{% url 'comentarios_alumno' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="comentario_id" value="{{ comentario.id }}">
+                </form>
+                <!-- Mostrar las respuestas al comentario -->
+                <ul class="respuestas">
+                    {% for respuesta in comentario.respuestas.all %}
+                    <li class="response-item">
+                        <div class="tweet-header">
+                            <span class="tweet-username">{{ respuesta.autor.username }}</span>
+                            <span class="tweet-timestamp">{{ respuesta.fecha_creacion }}</span>
+                        </div>
+                        <p class="tweet-text">{{ respuesta.texto }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+        <h2>Responder al Comentario</h2>
+        <form method="post" action="{% url 'nueva_respuesta' comentario.id %}">
+            {% csrf_token %}
+            <textarea name="texto" placeholder="Responder a este comentario" class="response-textarea"></textarea>
+            <button type="submit" class="response-button">Responder</button>
+        </form>
+    </div>
+</body>
+</html>

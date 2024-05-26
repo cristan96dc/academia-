@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notificaciones</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const user_id = "{{ request.user.id }}";
+            const notificationSocket = new WebSocket(
+                'ws://' + window.location.host + '/ws/notifications/'
+            );
+
+            notificationSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const notificacionesLista = document.getElementById('notificaciones-lista');
+                const newNotification = document.createElement('li');
+                newNotification.innerHTML = `<p>${data.notification}</p><p>${new Date().toLocaleString()}</p>`;
+                notificacionesLista.prepend(newNotification); // Añadir la nueva notificación al inicio de la lista
+            };
+
+            notificationSocket.onclose = function(e) {
+                console.error('Notification socket closed unexpectedly');
+            };
+        });
+    </script>
+</head>
+<body>
+    <h2>Notificaciones de usuarios:</h2>
+    <ul id="notificaciones-lista">
+        {% for notificacion in notificaciones %}
+        <li>
+            {% if notificacion.tipo == 'like' %}
+            <p>{{ notificacion.remitente.username }} dio like a tu comentario.</p>
+            {% elif notificacion.tipo == 'respuesta' %}
+            <p>{{ notificacion.remitente.username }} respondió a tu comentario.</p>
+            {% endif %}
+            <p>{{ notificacion.fecha_creacion }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

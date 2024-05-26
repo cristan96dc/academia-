@@ -1,0 +1,76 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Cursos</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/items.css' %}">
+
+    
+</head>
+<body>
+    <ul class="navbar-links">
+        <li><a href="/">home</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="/comentarios_alumno/">Comentarios Alumno</a></li>
+        {% endif %}    <li><a href="/profe/">Profesores</a></li>
+        <li><a href="/lista-cursos/">Lista Cursos</a></li>
+    
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'cursos_inscritos' %}">Tus inscripciones</a></li>
+        <li><a href="/perfil/">Perfil</a></li>
+        <li>
+            <a href="#" id="notificaciones" data-url="{% url 'notificaciones' %}" class="notificaciones-link {{ notificaciones_class }}">{{ notificaciones_no_vistas }} Notificaciones</a>
+        </li>
+        {% endif %}
+    
+        <li>
+          {% if user.is_authenticated %}
+          <a href="{% url 'user_logout' %}">Logout</a>
+          {% else %}
+          <a href="{% url 'user_login' %}">Login</a>
+          {% endif %}
+        </li>
+    </ul>
+    <h1>Lista de Cursos</h1>
+    
+    <!-- Formulario de filtro -->
+    <form method="GET">
+        <label for="tipo">Tipo:</label>
+        <select name="tipo" id="tipo">
+            <option value="">Todos</option>
+            {% for tipo in tipos %}
+                <option value="{{ tipo }}" {% if tipo == tipo_filtrado %}selected{% endif %}>{{ tipo }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="años">Año:</label>
+        <select name="años" id="años">
+            <option value="">Todos</option>
+            {% for año in años %}
+                <option value="{{ año }}" {% if año == años_filtrados %}selected{% endif %}>{{ año }}</option>
+            {% endfor %}
+        </select>
+        
+        <button type="submit">Filtrar</button>
+    </form>
+    
+    <!-- Lista de cursos -->
+    <ul>
+        {% for curso in cursos %}
+            <li>
+                <!-- Enlace al detalle del curso -->
+                <span class="separador"></span> <!-- Línea vertical -->
+
+                <a href="{% url 'detalle_curso' curso.id %}" class="curso-nombre">{{ curso.nombre }}</a>
+                <hr>
+                <span class="separador"></span> <!-- Línea vertical -->
+                <hr>
+            </li>
+        
+        {% endfor %}
+    </ul>
+</body>
+</html>

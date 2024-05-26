@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Comentario</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/comentarios.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/barra.css' %}">
+
+    <script>
+        function toggleLike(button) {
+            if (button.innerHTML === 'Like') {
+                button.innerHTML = 'Unlike';
+            } else {
+                button.innerHTML = 'Like';
+            }
+        }
+    </script>
+    <style>
+        /* Agrega tus estilos aquí */
+    </style>
+</head>
+<body>
+    <ul class="navbar-links">
+        <li><a href="/">home</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="/comentarios_alumno/">Comentarios Alumno</a></li>
+        {% endif %}    <li><a href="/profe/">Profesores</a></li>
+        <li><a href="/lista-cursos/">Lista Cursos</a></li>
+    
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'cursos_inscritos' %}">Tus inscripciones</a></li>
+        <li><a href="/perfil/">Perfil</a></li>
+        <li>
+            <a href="#" id="notificaciones" data-url="{% url 'notificaciones' %}" class="notificaciones-link {{ notificaciones_class }}">{{ notificaciones_no_vistas }} Notificaciones</a>
+        </li>
+        {% endif %}
+    
+        <li>
+          {% if user.is_authenticated %}
+          <a href="{% url 'user_logout' %}">Logout</a>
+          {% else %}
+          <a href="{% url 'user_login' %}">Login</a>
+          {% endif %}
+        </li>
+    </ul>
+    <div class="container">
+        <h1>Comentarios del Alumno</h1>
+        <!-- Formulario para agregar un nuevo comentario -->
+        <form method="post" action="{% url 'comentarios_alumno' %}">
+            {% csrf_token %}
+            <label for="texto">Contenido:</label><br>
+            <textarea id="texto" name="texto"></textarea><br>
+            <button type="submit">Agregar Comentario</button>
+        </form>
+        <h2>Comentarios</h2>
+        <ul>
+            <!-- Iterar sobre todos los comentarios -->
+            {% for comentario in comentarios %}
+            <li class="tweet-container">
+                <div class="tweet-header">
+                    <!-- Mostrar el nombre de usuario y la fecha de creación del comentario -->
+                    <span class="tweet-username">{{ comentario.alumno.username }}</span>
+                    <span class="tweet-timestamp">{{ comentario.fecha_creacion }}</span>
+                </div>
+                <!-- Mostrar el contenido del comentario -->
+                <p class="tweet-text">{{ comentario.texto }}</p>
+                <!-- Mostrar la cantidad de likes del comentario -->
+                <p>Likes: {{ comentario.likes.count }}</p>
+                <!-- Formulario para dar o quitar like al comentario -->
+                <form method="post" action="{% url 'comentarios_alumno' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="comentario_id" value="{{ comentario.id }}">
+                    <!-- El botón de "like" debe estar deshabilitado si el usuario no está autenticado -->
+                    <button type="submit" name="like" {% if not user.is_authenticated %} disabled {% endif %}>Like</button>
+                </form>
+                <!-- Botón para responder al comentario -->
+                <button onclick="location.href='{% url 'nueva_respuesta' comentario.id %}'">Responder</button>
+                <!-- Botón para mostrar/ocultar las respuestas -->
+                <button class="toggle-responses-btn">Mostrar Respuestas</button>
+                
+                <!-- Mostrar las respuestas al comentario -->
+                <ul class="respuestas" style="display: none;">
+                    {% for respuesta in comentario.respuestas.all %}
+                    <li>{{ respuesta.autor.username }} - {{ respuesta.texto }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        // JavaScript para mostrar/ocultar las respuestas al hacer clic en el botón
+        const toggleResponsesBtns = document.querySelectorAll('.toggle-responses-btn');
+
+        toggleResponsesBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const responsesList = btn.nextElementSibling;
+                if (responsesList.style.display === 'none') {
+                    responsesList.style.display = 'block';
+                    btn.textContent = 'Ocultar Respuestas';
+                } else {
+                    responsesList.style.display = 'none';
+                    btn.textContent = 'Mostrar Respuestas';
+                }
+            });
+        });
+    </script>
+    <script src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>

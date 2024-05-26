@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+    <script>
+        // Función para establecer la fecha actual en el campo de fecha de nacimiento
+        function setTodayDate() {
+            var today = new Date().toISOString().split('T')[0];
+            document.getElementById('id_fecha_de_nacimiento').value = today;
+        }
+    </script>
+</head>
+<body>
+    <h2>Sign Up</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <!-- Campo de fecha de nacimiento con la fecha actual -->
+        <label for="id_fecha_de_nacimiento">Fecha de Nacimiento:</label>
+        <input type="date" id="id_fecha_de_nacimiento" name="fecha_de_nacimiento">
+        
+        <!-- Llamar a la función setTodayDate al cargar la página -->
+        <script>setTodayDate();</script>
+        
+        <!-- Campo de foto de perfil -->
+        <label for="id_foto_de_perfil">Foto de Perfil:</label>
+        <input type="file" id="id_foto_de_perfil" name="foto_de_perfil">
+        
+        <!-- Campo de descripción -->
+        <label for="id_descripcion">Descripción:</label>
+        <textarea id="id_descripcion" name="descripcion"></textarea>
+        
+        <button type="submit">Sign Up</button>
+    </form>
+</body>
+</html>

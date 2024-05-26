@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles del Curso</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+</head>
+<body>
+    <ul class="navbar-links">
+        <li><a href="/">home</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="/comentarios_alumno/">Comentarios Alumno</a></li>
+        {% endif %}    <li><a href="/profe/">Profesores</a></li>
+        <li><a href="/lista-cursos/">Lista Cursos</a></li>
+    
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'cursos_inscritos' %}">Tus inscripciones</a></li>
+        <li><a href="/perfil/">Perfil</a></li>
+        <li>
+            <a href="#" id="notificaciones" data-url="{% url 'notificaciones' %}" class="notificaciones-link {{ notificaciones_class }}">{{ notificaciones_no_vistas }} Notificaciones</a>
+        </li>
+        {% endif %}
+    
+        <li>
+          {% if user.is_authenticated %}
+          <a href="{% url 'user_logout' %}">Logout</a>
+          {% else %}
+          <a href="{% url 'user_login' %}">Login</a>
+          {% endif %}
+        </li>
+    </ul>
+    <h1>{{ curso.nombre }}</h1>
+    <p><strong></strong> {{ curso.decribcion }}</p>
+    <p><strong></strong> {{ curso.tipo }}</p>
+    <p><strong></strong> {{ curso.años }}</p>
+    
+    {% if usuario_inscrito %}
+        <p>Ya estás inscrito en este curso.</p>
+    {% else %}
+        <!-- Botón para inscribirse en el curso -->
+        <form action="{% url 'inscribirse_curso' curso.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Inscribirse en el curso</button>
+        </form>
+    {% endif %}
+    <br>
+    <!-- Botón para volver a la página de inicio -->
+    <a href="{% url 'welcome' %}"><button>Volver a la bienvenida</button></a>
+</body>
+</html>

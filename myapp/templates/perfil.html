@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil de Usuario</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/comentarios.css' %}">
+<style>
+    .perfil {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .perfil h1 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .perfil p {
+        margin: 10px 0;
+        color: #666;
+    }
+    .perfil strong {
+        color: #000;
+    }
+    .foto-perfil {
+        max-width: 200px;
+        border-radius: 50%;
+        margin-top: 20px;
+    }
+</style>
+</style>
+</head>
+<body>
+    <ul class="navbar-links">
+        <li><a href="/">home</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="/comentarios_alumno/">Comentarios Alumno</a></li>
+        {% endif %}    <li><a href="/profe/">Profesores</a></li>
+        <li><a href="/lista-cursos/">Lista Cursos</a></li>
+    
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'cursos_inscritos' %}">Tus inscripciones</a></li>
+        <li><a href="/perfil/">Perfil</a></li>
+        <li>
+            <a href="#" id="notificaciones" data-url="{% url 'notificaciones' %}" class="notificaciones-link {{ notificaciones_class }}">{{ notificaciones_no_vistas }} Notificaciones</a>
+        </li>
+        {% endif %}
+    
+        <li>
+          {% if user.is_authenticated %}
+          <a href="{% url 'user_logout' %}">Logout</a>
+          {% else %}
+          <a href="{% url 'user_login' %}">Login</a>
+          {% endif %}
+        </li>
+    </ul>  </li>
+    </ul>
+    <div class="perfil">
+        <a href="{% url 'editar_perfil' %}"><button>Editar Perfil</button></a>
+
+        <h1>Perfil de {{ usuario.username }}</h1>
+        {% if otra_clase_info.foto_de_perfil %}
+    <img src="{{ otra_clase_info.foto_de_perfil.url }}" alt="Foto de Perfil" class="foto-perfil">
+{% else %}
+    <img src="{% static 'img/default_profile.png' %}" alt="Foto de Perfil Predeterminada" class="foto-perfil">
+{% endif %}
+        <p><strong>Nombre de usuario:</strong> {{ usuario.username }}</p>
+        <p><strong>Email:</strong> {{ usuario.email }}</p>
+        <p><strong>Fecha de Nacimiento:</strong> {{ otra_clase_info.fecha_de_nacimiento }}</p>
+        <p><strong>Descripción:</strong> {{ otra_clase_info.descripcion }}</p>
+        <!-- Aquí podrías mostrar la foto de perfil si está disponible -->
+        
+    </div>
+    
+    <h3>Comentarios del usuario:</h3>
+    <ul>
+        {% for comentario in comentarios_usuario %}
+            <li class="tweet-container">
+                <div class="tweet-header">
+                    <span class="tweet-username">{{ comentario.alumno.username }}</span>
+                    <span class="tweet-timestamp">{{ comentario.fecha_creacion }}</span>
+                </div>
+                <p class="tweet-text">{{ comentario.texto }}</p>
+                <p>Likes: {{ comentario.likes.count }}</p>
+                <div class="comment-buttons">
+                    <form method="post" action="{% url 'editar_comentario' comentario.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-secondary" name="edit">Editar</button>
+                    </form>
+                    <form method="post" action="{% url 'eliminar_comentario' comentario.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="delete">Eliminar</button>
+                    </form>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+
+</body>
+</html>

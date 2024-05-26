@@ -1,0 +1,195 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/barra.css' %}">
+
+    <title>Bienvenido a Curso R</title>
+    <style>
+        /* Estilos para la ventana modal */
+        .modal {
+            display: none; /* Ocultar la ventana modal por defecto */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        /* Estilos para el contenido de la ventana modal */
+        .modal-content {
+            background-color: #252020;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #080808;;
+            width: 80%;
+        }
+
+        /* Estilos para el botón de cerrar */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #ff0000;;
+            text-decoration: none;
+            cursor: pointer;
+        }
+      
+        .barra {
+          display: inline-block;
+          padding: 10px 20px;
+          margin: 5px;
+          background-color: #007BFF;
+          color: white;
+          text-decoration: none;
+          border-radius: 5px;
+        }
+        .barra:hover {
+          background-color: #0056b3;
+        }
+        section {
+          width: 80%; /* Ancho del section */
+          margin: 30px auto; /* Centrar horizontalmente y agregar margen superior e inferior */
+          padding: 20px; /* Espaciado interno */
+          border: 2px solid #1da1f2; /* Borde */
+          border-radius: 10px; /* Borde redondeado */
+          background-color: #585757; /* Color de fondo */
+          box-sizing: border-box; /* Incluir padding en el tamaño total */
+          text-align: justify; /* Alinear texto justificado */
+        }
+        
+        /* Estilo para el título de la sección */
+        section h2 {
+          margin-top: 0; /* Eliminar margen superior */
+        }
+        
+        /* Estilo para la lista dentro de la sección */
+        section ul {
+          margin-top: 0; /* Eliminar margen superior */
+          padding-left: 20px; /* Sangría izquierda para la lista */
+        }
+        
+        /* Estilo para los elementos de la lista dentro de la sección */
+        section li {
+          margin-bottom: 10px; /* Espaciado inferior para los elementos de la lista */
+        }
+        .content-wrapper {
+          text-align: center; /* Centrar el contenido horizontalmente */
+          max-width: 800px; /* Establecer un ancho máximo para el contenido */
+          margin: 0 auto; /* Centrar horizontalmente */
+        }
+        /* Estilo para el enlace de notificaciones */
+.notificaciones-link {
+    /* Agrega estilos de tu elección */
+    text-decoration: none; /* Elimina la subrayado predeterminado */
+    color: #333; /* Color del texto */
+}
+
+/* Estilo para resaltar visualmente una nueva notificación */
+.new-notification {
+    font-weight: bold; /* Hace que el texto sea más grueso */
+    color: red; /* Cambia el color del texto a rojo */
+}
+    </style>
+</head>
+
+
+<body>
+  <ul class="navbar-links">
+    <li><a href="/">home</a></li>
+    {% if user.is_authenticated %}
+    <li><a href="/comentarios_alumno/">Comentarios Alumno</a></li>
+    {% endif %}    <li><a href="/profe/">Profesores</a></li>
+    <li><a href="/lista-cursos/">Lista Cursos</a></li>
+
+    {% if user.is_authenticated %}
+    <li><a href="{% url 'cursos_inscritos' %}">Tus inscripciones</a></li>
+    <li><a href="/perfil/">Perfil</a></li>
+    <li>
+        <a href="#" id="notificaciones" data-url="{% url 'notificaciones' %}" class="notificaciones-link {{ notificaciones_class }}">{{ notificaciones_no_vistas }} Notificaciones</a>
+    </li>
+    {% endif %}
+
+    <li>
+      {% if user.is_authenticated %}
+      <a href="{% url 'user_logout' %}">Logout</a>
+      {% else %}
+      <a href="{% url 'user_login' %}">Login</a>
+      {% endif %}
+    </li>
+</ul>
+
+  
+  <h1>Bienvenido a Academia R</h1>
+  <h2>una nueva forma de aprender</h2>
+  <div class="barra">
+    <a href="#quienes-somos" class="barra">Quiénes Somos</a>
+    <a href="#nuestro-objetivo" class="barra">Nuestro Objetivo</a>
+    <a href="#los-fundadores" class="barra">Los Fundadores</a>
+  </div>
+  <br><br><br>
+
+  <img src="{% static 'img/academia.png' %}" alt="Academiar">
+  <br><br><br>
+
+  <section id="quienes-somos">
+    <div class="content-wrapper"> <!-- Contenedor adicional para centrar el contenido -->
+
+    <h2>Quiénes Somos</h2>
+    <p>Academiar es una academia virtual innovadora y accesible, dedicada a proporcionar educación de alta calidad a estudiantes de todas las edades y orígenes. Nuestra misión es democratizar el acceso al conocimiento, ofreciendo una amplia variedad de cursos en múltiples disciplinas que van desde las ciencias y las humanidades hasta las habilidades técnicas y creativas. Creemos en el poder transformador de la educación y estamos comprometidos a ayudar a nuestros estudiantes a alcanzar su máximo potencial.</p>
+  </div>
+
+  </section>
+  <br><br><br>
+  <section id="nuestro-objetivo">
+    <div class="content-wrapper"> <!-- Contenedor adicional para centrar el contenido -->
+      <h2>Nuestro Objetivo</h2>
+      <p>Academiar es una academia virtual innovadora y accesible, dedicada a proporcionar educación de alta calidad a estudiantes de todas las edades y orígenes. Nuestra misión es democratizar el acceso al conocimiento, ofreciendo una amplia variedad de cursos en múltiples disciplinas que van desde las ciencias y las humanidades hasta las habilidades técnicas y creativas. Creemos en el poder transformador de la educación y estamos comprometidos a ayudar a nuestros estudiantes a alcanzar su máximo potencial.</p>
+      <p>Nuestro principal objetivo en Academiar es empoderar a los estudiantes a través de la educación, proporcionándoles las herramientas y recursos necesarios para alcanzar sus metas académicas y profesionales. Queremos ser un faro de conocimiento y crecimiento personal, ayudando a cada alumno a desarrollar las competencias necesarias para tener éxito en un mundo en constante cambio. Nos enfocamos en:</p>
+     
+        <p>Calidad Educativa</p>
+        <p>Accesibilidad</p>
+        <p>Flexibilidad</p>
+        <p>Innovación</p>
+    
+    </div>
+  </section>
+  <br><br><br>
+  <section id="los-fundadores">
+    <div class="content-wrapper"> <!-- Contenedor adicional para centrar el contenido -->
+
+    <h2>Los Fundadores</h2>
+    <p>Academiar fue fundada por un equipo apasionado de educadores, tecnólogos y emprendedores con una visión compartida de transformar la educación. Los cofundadores principales incluyen:</p>
+    <ul>
+      <li><strong>Dr. Ana María Rodríguez:</strong> Educadora con más de 20 años de experiencia en enseñanza y desarrollo curricular. Su pasión por la educación accesible la llevó a cofundar Academiar.</li>
+      <li><strong>Carlos Fernández:</strong> Ingeniero en sistemas con un enfoque en tecnologías educativas. Carlos aporta su experiencia en el desarrollo de plataformas de aprendizaje digital.</li>
+    </ul>
+  </div>
+
+  </section>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div id="notificaciones-content"></div>
+    </div>
+  </div>
+
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>

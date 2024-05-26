@@ -1,0 +1,39 @@
+.profesor img {
+    width: 100px; /* Ancho de las imágenes */
+    height: auto; /* Altura automática para mantener la proporción */
+    border-radius: 50%; /* Para que las imágenes tengan forma redonda */
+    margin-right: 20px; /* Espacio entre la imagen y el texto */
+}
+
+/* Estilos para el texto de los profesores */
+
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: center; /* Centra los elementos */
+}
+/* Estilos para cada ítem de la lista */
+li {
+    margin-bottom: 20px; /* Espacio entre ítems */
+    position: relative; /* Permite posicionar el HR */
+}
+/* Estilos para la línea horizontal */
+hr {
+    border: none; /* Sin borde */
+    border-top: 3px solid #ccc; /* Línea horizontal */
+    position: absolute; /* Posicionamiento absoluto */
+    width: calc(100% - 40px); /* Ancho calculado */
+    max-width: 300px; /* Ancho máximo */
+    left: 50%; /* Posición horizontal en el medio */
+    transform: translateX(-50%); /* Alinea horizontalmente al centro */
+}
+/* Estilos para el enlace */
+a {
+    text-decoration: none; /* Quita el subrayado */
+    color: #f7f6f6; /* Color del texto */
+    font-size: 18px; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    display: inline-block; /* Permite posicionar el HR correctamente */
+
+}
